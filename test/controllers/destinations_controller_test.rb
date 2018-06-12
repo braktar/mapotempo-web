@@ -280,7 +280,7 @@ class DestinationsControllerTest < ActionController::TestCase
       end
     end
 
-    assert_redirected_to destinations_path
+    assert_redirected_to edit_planning_url(Planning.last)
   end
 
   test 'should not upload' do
@@ -309,6 +309,29 @@ class DestinationsControllerTest < ActionController::TestCase
 
     assert_template :import
     assert_valid response
+  end
+
+  test 'should redirect after upload_csv' do
+    [
+      { redirect: 'last_planning', file: 'import_custom_destinations_one.csv', column_def: { route: 'tour' } },
+      { redirect: 'destinations', file: 'import_destinations_update.csv', column_def: nil },
+      { redirect: 'plannings', file: 'import_destinations_several_plans.csv', column_def: nil }
+    ].each do |test|
+      file = ActionDispatch::Http::UploadedFile.new(
+        tempfile: File.new(Rails.root.join('test/fixtures/files/', test[:file]))
+      )
+      file.original_filename = test[:file]
+      post :upload_csv, import_csv: { replace: false, file: file, column_def: test[:column_def] ? test[:column_def] : nil }
+
+      case test[:redirect]
+      when 'last_planning'
+        assert_redirected_to edit_planning_url(Planning.last)
+      when 'destinations'
+        assert_redirected_to destinations_url
+      when 'plannings'
+        assert_redirected_to plannings_url
+      end
+    end
   end
 
   test 'should use limitation' do

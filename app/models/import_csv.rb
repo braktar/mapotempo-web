@@ -102,6 +102,19 @@ class ImportCsv
     end
   end
 
+  def include?(column_name)
+    test = data.collect do |line|
+      if line.is_a? Array
+        line.collect { |column|
+          column.first == column_def[column_name]
+        }
+      else
+        line.keys.include?(@importer.columns[column_name][:title])
+      end
+    end
+    test.flatten.uniq.include?(true)
+  end
+
   private
 
   def data

@@ -123,7 +123,13 @@ class DestinationsController < ApplicationController
     respond_to do |format|
       @import_csv = ImportCsv.new(import_csv_params.merge(importer: ImporterDestinations.new(current_user.customer), content_code: :html))
       if @import_csv.valid? && @import_csv.import
-        format.html { redirect_to action: 'index' }
+        if @import_csv.include?(:planning_ref)
+          format.html { redirect_to plannings_url }
+        elsif @import_csv.include?(:route)
+          format.html { redirect_to edit_planning_url(Planning.last) }
+        else
+          format.html { redirect_to action: 'index' }
+        end
       else
         @import_tomtom = ImportTomtom.new
         if current_user.customer.advanced_options
