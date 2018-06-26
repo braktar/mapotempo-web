@@ -1664,6 +1664,12 @@ var plannings_edit = function(params) {
     } else {
       $(".routes").sortable("disable");
     }
+
+    $(".route-btn-group").each(function(idx, elem) {
+      $(elem).toggleClass("pull-right");
+    })
+
+    $("#global_tools").toggleClass("pull-right");
   });
 
   $.ajax({
