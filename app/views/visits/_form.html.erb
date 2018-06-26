@@ -4,13 +4,15 @@
     <a name="visit_id=<%= visit.id %>"></a>
     <legend class="scheduler-border">
       <a data-toggle="collapse" data-parent="" href="#collapseVisit<%= visit.id || 0 %>" class="accordion-toggle"><span><%= t('.legend', n: i) %></span></a>
+        <% if visit.destination.customer.enable_multi_visits || !current_page?(action: 'new') %>
+          <div class="form-group destroy-block">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-default btn-sm flag-destroy" title="<%= t('.delete_help') %>"><i class="fa fa-trash-o fa-fw"></i> <%= t('.delete') %></button>
+            </div>
+          </div>
+        <% end %>
     </legend>
     <div id="collapseVisit<%= visit.id || 0 %>" class="collapse in">
-      <div class="form-group destroy-block">
-        <div class="col-md-3">
-          <button type="button" class="btn btn-default btn-sm flag-destroy" title="<%= t('.delete_help') %>"><i class="fa fa-trash-o fa-fw"></i> <%= t('.delete') %></button>
-        </div>
-      </div>
       <%= f.hidden_field :id %>
       <%= f.check_box :_destroy %>
       <%= f.label :_destroy do %>
