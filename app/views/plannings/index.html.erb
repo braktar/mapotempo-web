@@ -53,7 +53,10 @@
         <!--<td><%= planning.active? ? '✔' : '' %></td>-->
         <td>
         <% planning.tags.each{ |tag| %>
-          <%= tag.label %>
+          <span>
+            <%= tag_icon tag %>
+            <span><%= tag.label %></span>
+          </span>
         <% } %>
         </td>
         <td class="text-right">
