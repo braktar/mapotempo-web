@@ -92,7 +92,8 @@ module VehicleUsagesHelper
 
   def vehicle_external_services(vehicle)
     vehicle.devices.select{ |key, value| !value.nil? }.collect{ |key, value|
-      key.to_s.split('_').first.capitalize
+      s = key.to_s
+      s[0, s.rindex('_')].tr('_', ' ').capitalize
     }.join(', ')
   end
 

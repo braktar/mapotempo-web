@@ -318,7 +318,9 @@ class Customer < ApplicationRecord
         device_definition = device_object.definition
         if device_definition.key?(:forms) && device_definition[:forms].key?(:settings) && device_definition[:forms].key?(:vehicle)
           device_definition[:forms][:vehicle].keys.each{ |key|
-            self.vehicles.select(&:devices).each{ |vehicle| vehicle.devices[key] = nil } if self.send("#{device_name}_changed?")
+            self.vehicles.select(&:devices).each{ |vehicle|
+              vehicle.devices[key] = nil if self.send("#{device_name}_changed?")
+            }
           }
         end
       end
@@ -337,7 +339,7 @@ class Customer < ApplicationRecord
           if self.changed.include?('devices') && !before.nil? && !after.nil?
             if after.include?(device_name) && before.include?(device_name)
               device_definition[:forms][:settings].keys.each{ |key|
-                return true if after[device_name][key] != before[device_name][key]
+                return true if after[device_name][key] != before[device_name][key] || after[device_name][:enable] != before[device_name][:enable]
               }
             end
           end
