@@ -1,4 +1,5 @@
 en:
+  encoding: 'Windows-1252'
   distance:
     unit:
       one: m

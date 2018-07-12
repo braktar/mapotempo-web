@@ -58,7 +58,7 @@ class RoutesController < ApplicationController
       end
       format.excel do
         @columns = (@params[:columns] && @params[:columns].split('|')) || export_columns
-        send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', render_to_string).join(''),
+        send_data Iconv.iconv("#{I18n.t('encoding')}//translit//ignore", 'utf-8', render_to_string).join(''),
           type: 'text/csv',
           filename: filename + '.csv'
       end

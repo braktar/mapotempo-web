@@ -36,7 +36,7 @@ class DestinationsController < ApplicationController
       format.html
       format.json
       format.excel do
-        send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', render_to_string).join(''),
+        send_data Iconv.iconv("#{I18n.t('encoding')}//translit//ignore", 'utf-8', render_to_string).join(''),
             type: 'text/csv',
             filename: format_filename(t('activerecord.models.destinations.other')) + '.csv',
             disposition: params.key?(:disposition) ? params[:disposition] : 'attachment'
@@ -101,7 +101,7 @@ class DestinationsController < ApplicationController
   def import_template
     respond_to do |format|
       format.excel do
-        send_data Iconv.iconv('ISO-8859-1//translit//ignore', 'utf-8', render_to_string).join(''),
+        send_data Iconv.iconv("#{I18n.t('encoding')}//translit//ignore", 'utf-8', render_to_string).join(''),
             type: 'text/csv',
             filename: format_filename('import_template.csv'),
             disposition: params.key?(:disposition) ? params[:disposition] : 'attachment'
