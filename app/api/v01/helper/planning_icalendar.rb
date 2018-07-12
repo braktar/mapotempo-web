@@ -33,13 +33,14 @@ module PlanningIcalendar
   def add_route_to_calendar(calendar, route)
     route.stops.select(&:active?).select(&:position?).select(&:time?).sort_by(&:index).each do |stop|
       event_start = p_time(route, stop.time)
-      calendar.add_timezone TZInfo::Timezone.get(Time.zone.tzinfo.name).ical_timezone(event_start)
+
       calendar.add_event stop_ics(route, stop, event_start)
     end
   end
 
   def planning_calendar(planning)
     calendar = Icalendar::Calendar.new
+    create_timezone calendar
     Route.includes_destinations.scoping do
       planning.routes.select(&:vehicle_usage_id).each do |route|
         add_route_to_calendar calendar, route
@@ -52,6 +53,7 @@ module PlanningIcalendar
     calendar = Icalendar::Calendar.new
     Route.includes_destinations.scoping do
       plannings.each do |planning|
+        create_timezone calendar
         planning.routes.select(&:vehicle_usage_id).each do |route|
           add_route_to_calendar calendar, route
         end
@@ -62,6 +64,7 @@ module PlanningIcalendar
 
   def route_calendar(route)
     calendar = Icalendar::Calendar.new
+    create_timezone calendar
     add_route_to_calendar calendar, route
     calendar
   end
@@ -76,4 +79,13 @@ module PlanningIcalendar
     end
   end
 
+  def create_timezone(calendar)
+    tz = TZInfo::Timezone.get(Time.zone.tzinfo.name).ical_timezone(Time.zone.now)
+
+    calendar.add_timezone tz unless timezone_exist?(calendar, tz)
+  end
+
+  def timezone_exist?(calendar, tz)
+    calendar.timezones.any? { |t| t.tzid == tz.tzid }
+  end
 end
