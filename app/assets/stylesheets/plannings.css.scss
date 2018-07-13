@@ -29,6 +29,39 @@ $sidebar-margins: 10px;
       margin-right: $sidebar-width + $sidebar-margins; // not possible to use right because it's overloaded by pnotify
     }
   }
+  #planning-move-stops-modal { 
+    .modal-body {
+      text-align: center;
+      .fa-spinner {
+        margin: 15px;
+      }
+      .overflow-500 {
+        max-height: 500px;
+        overflow: auto;
+      }
+      .move-stops-toggle {
+        margin: 7px 18px;
+      }
+      table {
+        text-align: left;
+      }
+      hr {
+        clear: both;
+      }
+      .move-route-selector {
+        padding-top: 15px;
+        height: 60px;
+        vertical-align: middle;
+      }
+      label {
+        margin: 15px;
+      }
+      div {
+        display: inline-block;
+        margin: 0 2px;
+      }
+    }
+  }
 }
 
 [data-controller='plannings'][data-action='index'] {
@@ -206,6 +239,7 @@ $sidebar-margins: 10px;
       #planning {
         .route-info {
           white-space: nowrap;
+          margin: 0 1px;
         }
 
         .route-skills {

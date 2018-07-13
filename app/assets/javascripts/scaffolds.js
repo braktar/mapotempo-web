@@ -34,13 +34,14 @@ $(document).on('ready page:load', function() {
 (function($) {
   $.fn.toggleSelect = function() {
     this.click(function() {
+      var $this = null;
       $($(this).data('target') + ' input:checkbox').each(function() {
-        var $this = $(this);
+        $this = $(this);
         if ($this.is(':visible')) {
           this.checked = !this.checked;
-          $(this).change();
         }
       });
+      $this.change(); // send only one event for perf
     });
     return this;
   };
@@ -504,6 +505,18 @@ L.disableClustersControl = function(map, routesLayer) {
   });
 
   map.addControl(new disableClustersControl(routesLayer));
+};
+
+Number.prototype.toHHMM = function() {
+  var sec_num = parseInt(this, 10);
+  var hours   = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+  if (hours   < 10) {hours   = "0"+hours;}
+  if (minutes < 10) {minutes = "0"+minutes;}
+  if (seconds < 10) {seconds = "0"+seconds;}
+  return hours+':'+minutes;
 };
 
 Date.prototype.toLocalISOString = function() {

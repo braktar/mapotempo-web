@@ -233,6 +233,7 @@ controller.js(
   map_lng: @planning.vehicle_usage_set.vehicle_usages.active.collect(&:default_store_start).compact.find{ |s| s.lng }.try(:lng) || @planning.customer.default_position[:lng],
   vehicles_array: planning_vehicles_array(@planning),
   vehicles_usages_map: planning_vehicles_usages_map(@planning),
+  quantities: planning_quantities(@planning),
   color_codes: COLORS_TABLE,
   colors_by_route: Hash[@planning.routes.select(&:vehicle_usage).map{ |r| [r.id, r.default_color] }],
   disable_clusters: !large_plannning,

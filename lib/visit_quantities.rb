@@ -29,6 +29,7 @@ class VisitQuantities
         {
           deliverable_unit_id: du.id,
           quantity: q,
+          quantity_float: quantities[du.id],
           unit_icon: du.default_icon
         }
       end
