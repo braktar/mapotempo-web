@@ -190,9 +190,24 @@ class V01::VisitsTest < ActiveSupport::TestCase
     assert_equal 2, JSON.parse(last_response.body).size
   end
 
-  test 'should destroy multiple destinations' do
+  test 'should destroy multiple visits' do
     assert_difference('Visit.count', -2) do
       delete api + "&ids=#{visits(:visit_one).id},#{visits(:visit_two).id}"
+      assert_equal 204, last_response.status, last_response.body
+    end
+  end
+
+  test 'should destroy all visits without params' do
+    assert_difference('Visit.count', -customers(:customer_one).visits.count) do
+      delete api
+      assert_equal 204, last_response.status, last_response.body
+    end
+  end
+
+  test 'should destroy all visits when all ids/ref in params' do
+    ref = visits(:visit_two).ref
+    assert_difference('Visit.count', -Visit.where(ref: ref).count) do
+      delete api + "&ids=#{visits(:visit_one).id},ref:#{ref}"
       assert_equal 204, last_response.status, last_response.body
     end
   end

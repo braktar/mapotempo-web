@@ -184,13 +184,24 @@ class V01::Visits < Grape::API
     desc 'Delete multiple visits.',
       nickname: 'deleteVisits'
     params do
-      requires :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3.', coerce_with: CoerceArrayString
+      optional :ids, type: Array[String], desc: 'Ids separated by comma. You can specify ref (not containing comma) instead of id, in this case you have to add "ref:" before each ref, e.g. ref:ref1,ref:ref2,ref:ref3.', coerce_with: CoerceArrayString
     end
     delete do
       Visit.transaction do
-        current_customer.visits.select{ |visit|
-          params[:ids].any?{ |s| ParseIdsRefs.match(s, visit) }
-        }.each(&:destroy)
+        if params[:ids] && !params[:ids].empty?
+          visits = current_customer.visits.select { |visit|
+            params[:ids].any? { |s| ParseIdsRefs.match(s, visit) }
+          }
+
+          if current_customer.visits.count == visits.count
+            current_customer.delete_all_visits
+          else
+            visits.each(&:destroy)
+          end
+        else
+          current_customer.delete_all_visits
+        end
+
         status 204
       end
     end

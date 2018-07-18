@@ -244,16 +244,13 @@ class Customer < ApplicationRecord
 
   def delete_all_destinations
     destinations.delete_all
-    Route.includes_stops.scoping do
-      plannings.reload.each { |p|
-        p.routes.each do |route|
-          # reindex remaining stops (like rests)
-          route.force_reindex
-          route.outdated = true if !route.geojson_points.try(&:empty?) || !route.geojson_tracks.try(&:empty?)
-        end
-        p.save!
-      }
-    end
+    reindex_routes
+  end
+
+  def delete_all_visits
+    Visit.where(id: visits.map(&:id)).delete_all
+    self.reload
+    reindex_routes
   end
 
   def max_vehicles
@@ -301,6 +298,18 @@ class Customer < ApplicationRecord
   end
 
   private
+  def reindex_routes
+    Route.includes_stops.scoping do
+      plannings.reload.each { |p|
+        p.routes.each do |route|
+          # reindex remaining stops (like rests)
+          route.force_reindex
+          route.outdated = true if !route.geojson_points.try(&:empty?) || !route.geojson_tracks.try(&:empty?)
+        end
+        p.save!
+      }
+    end
+  end
 
   def devices_update_vehicles
     # Remove device association on vehicles if devices credentials have changed
