@@ -27,6 +27,7 @@ class Optimizer
   @@cluster_size = Mapotempo::Application.config.optimize_cluster_size
   @@cost_waiting_time = Mapotempo::Application.config.optimize_cost_waiting_time
   @@force_start = Mapotempo::Application.config.optimize_force_start
+  @@optimize_minimal_time = Mapotempo::Application.config.optimize_minimal_time
 
   def self.optimize(planning, route, options = { global: false, synchronous: false, active_only: true, ignore_overload_multipliers: [] })
     optimize_time = planning.customer.optimization_time || @@optimize_time
@@ -58,7 +59,8 @@ class Optimizer
             vehicle_soft_upper_bound: planning.customer.optimization_vehicle_soft_upper_bound || @@vehicle_soft_upper_bound,
             cluster_threshold: planning.customer.optimization_cluster_size || @@cluster_size,
             cost_waiting_time: planning.customer.optimization_cost_waiting_time || @@cost_waiting_time,
-            force_start: planning.customer.optimization_force_start.nil? ? @@force_start : planning.customer.optimization_force_start
+            force_start: planning.customer.optimization_force_start.nil? ? @@force_start : planning.customer.optimization_force_start,
+            optimize_minimal_time: planning.customer.optimization_minimal_time || @@optimize_minimal_time
           )
         end
       end

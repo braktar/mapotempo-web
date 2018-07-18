@@ -62,7 +62,7 @@ class V01::CustomerTest < ActiveSupport::TestCase
   test 'should update a customer' do
     @customer.devices[:tomtom] = {enable: true}
     @customer.save!
-    put api(@customer.id), { devices: {tomtom: {user: 'user_abcd'}}.to_json, ref: 'ref-abcd', router_options: {motorway: true, trailers: 2, weight: 10, hazardous_goods: 'gas'} }
+    put api(@customer.id), { devices: {tomtom: {user: 'user_abcd'}}.to_json, ref: 'ref-abcd', router_options: {motorway: true, trailers: 2, weight: 10, hazardous_goods: 'gas'}, optimization_minimal_time: 3, optimization_time: 5 }
     assert last_response.ok?, last_response.body
 
     get api(@customer.id)
@@ -90,7 +90,7 @@ class V01::CustomerTest < ActiveSupport::TestCase
     begin
       Mapotempo::Application.config.manage_vehicles_only_admin = true
       assert_no_difference('Vehicle.count') do
-        put api(@customer.id), { max_vehicles: @customer.max_vehicles + 1 }
+        put api(@customer.id), { max_vehicles: @customer.max_vehicles + 1, optimization_minimal_time: 3, optimization_time: 5 }
         assert last_response.ok?, last_response.body
       end
     ensure
@@ -103,7 +103,7 @@ class V01::CustomerTest < ActiveSupport::TestCase
       assert_difference('VehicleUsage.count', @customer.vehicle_usage_sets.size) do
         assert_difference('Route.count', @customer.plannings.length) do
           Routers::RouterWrapper.stub_any_instance(:compute_batch, lambda { |url, mode, dimension, segments, options| segments.collect{ |i| [1, 1, '_ibE_seK_seK_seK'] } } ) do
-            put api_admin(@customer.id), { devices: {tomtom_id: "user_abcd"}.to_json, ref: 'ref-abcd', max_vehicles: @customer.max_vehicles + 1 }
+            put api_admin(@customer.id), { devices: {tomtom_id: "user_abcd"}.to_json, ref: 'ref-abcd', max_vehicles: @customer.max_vehicles + 1, optimization_minimal_time: 3, optimization_time: 5 }
             assert last_response.ok?, last_response.body
           end
         end
@@ -142,7 +142,7 @@ class V01::CustomerTest < ActiveSupport::TestCase
           assert_difference('Store.count', 1) do
             assert_difference('VehicleUsageSet.count', 1) do
               assert_difference('Vehicle.count', 5) do
-                post api_admin, {name: 'new cust', max_vehicles: 5, default_country: 'France', router_id: @customer.router_id, profile_id: @customer.profile_id, take_over: '00:02:30'}
+                post api_admin, {name: 'new cust', max_vehicles: 5, default_country: 'France', router_id: @customer.router_id, profile_id: @customer.profile_id, take_over: '00:02:30', optimization_minimal_time: 3, optimization_time: 5}
                 assert last_response.created?, last_response.body
                 assert_equal 5, JSON.parse(last_response.body)['max_vehicles']
                 assert_equal '00:02:30', JSON.parse(last_response.body)['take_over']

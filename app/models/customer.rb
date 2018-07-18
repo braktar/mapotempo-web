@@ -82,6 +82,8 @@ class Customer < ApplicationRecord
   validates :max_destinations, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_destinations }, allow_nil: true
   validates :max_vehicle_usage_sets, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_vehicle_usage_sets }, allow_nil: true
   validates :speed_multiplier, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplier
+  validates :optimization_minimal_time, numericality: { greater_than_or_equal_to: 3 }, allow_nil: false
+  validates :optimization_time, numericality: { greater_than: :optimization_minimal_time }, allow_nil: false
 
   after_initialize :assign_defaults, :update_max_vehicles, if: :new_record?
   after_initialize :assign_device

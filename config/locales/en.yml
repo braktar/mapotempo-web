@@ -150,6 +150,7 @@ en:
         optimization_max_split_size: Optimization split size
         optimization_cluster_size: Optimization cluster size
         optimization_time: Maximum optimization time by vehicle
+        optimization_minimal_time: Minimum optimization time by vehicle
         optimization_stop_soft_upper_bound: Stops delay coefficient
         optimization_vehicle_soft_upper_bound: Vehicles delay coefficient
         optimization_cost_waiting_time: Waiting time coefficient
@@ -835,9 +836,13 @@ en:
         optimization. A great value will degrade optimization result (30 sec is already
         an important value). Take into account only for a single route optimization
         with delays and without any vehicle's capacity.
+      optimization_time: Optimization time (minimum and maximum)
       optimization_time_default: '%{n} (default value)'
-      optimization_time_help: The optimization stops automatically by default. Nevertheless
-        you can specify here a maximum time, per vehicle, for optimization.
+      optimization_time_help: You can specify here a maximum time, per vehicle, for optimization, 
+        else the optimization stops automatically by default.
+      optimization_minimal_time_default: '%{n} (default value)'
+      optimization_minimal_time_help: You can specify here a minimum duration, per vehicle, else 
+        optimization stops automatically.
       optimization_soft_upper_bound_default: '%{n} (default value)'
       optimization_stop_soft_upper_bound_help: 'More the value is important, more
         delays are detrimental (0 to disallow delays strictly: turn clusters off in

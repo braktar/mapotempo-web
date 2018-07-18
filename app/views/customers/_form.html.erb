@@ -350,9 +350,20 @@
       <%= f.number_field :optimization_cluster_size, { placeholder: t('.optimization_cluster_size_default', n: LocalizedValues.localize_numeric_value(Mapotempo::Application.config.optimize_cluster_size)), min: 0, input_group: t('all.unit.second')} do %>
         <p class="help-block"><%= t '.optimization_cluster_size_help' %></p>
       <% end %>
-      <%= f.number_field :optimization_time, { placeholder: t('.optimization_time_default', n: LocalizedValues.localize_numeric_value(Mapotempo::Application.config.optimize_time)), min: 0, input_group: t('all.unit.second')} do %>
-        <p class="help-block"><%= t '.optimization_time_help' %></p>
-      <% end %>
+
+      <div class="form-group">
+        <label class="col-md-2 control-label"><%= t '.optimization_time' %></label>
+        <div class="col-md-6">
+          <div class="input-group">
+            <%= number_field 'customer', 'optimization_minimal_time', value: @customer.optimization_minimal_time, placeholder: t('.optimization_minimal_time_default', n: LocalizedValues.localize_numeric_value(Mapotempo::Application.config.optimize_minimal_time)), min: 3, class: 'form-control width_1_2' %>
+            <%= number_field 'customer', 'optimization_time' , value: @customer.optimization_time, placeholder: t('.optimization_time_default', n: LocalizedValues.localize_numeric_value(Mapotempo::Application.config.optimize_time)), min: 0, class: 'form-control width_1_2' %>
+            <span class="input-group-addon" ><%= t('all.unit.second') %></span>
+          </div>
+          <p class="help-block col-md-6"><%= t '.optimization_minimal_time_help' %></p>
+          <p class="help-block col-md-6"><%= t '.optimization_time_help' %></p>
+        </div>
+      </div>
+
       <%= f.number_field :optimization_stop_soft_upper_bound, { placeholder: t('.optimization_soft_upper_bound_default', n: LocalizedValues.localize_numeric_value(Mapotempo::Application.config.optimize_stop_soft_upper_bound)), min: 0, step: 'any', input_group: '×'} do %>
         <p class="help-block"><%= t '.optimization_stop_soft_upper_bound_help' %></p>
       <% end %>

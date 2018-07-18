@@ -150,6 +150,7 @@
         'optimization_max_split_size': 'Découper le problème'
         'optimization_cluster_size': 'Taille des clusters d''optimisation'
         'optimization_time': 'Temps d''optimisation maximum par véhicule'
+        'optimization_minimal_time': 'Temps d''optimisation minimal par véhicule'
         'optimization_stop_soft_upper_bound': 'Coefficient retards / arrêts'
         'optimization_vehicle_soft_upper_bound': 'Coefficient retards / véhicules'
         'optimization_cost_waiting_time': 'Coefficient de temps d''attente'
@@ -864,10 +865,13 @@
         la qualité de l''optimisation (30 sec est une grande valeur). Valable uniquement
         dans le cas d''une optimisation d''une seule tournée avec retards sans capacité
         sur votre véhicule.'
+      'optimization_time': "Durée d'optimisation (minimale et maximale)"
       'optimization_time_default': '%{n} (valeur par défaut)'
-      'optimization_time_help': 'L''optimisation s''arrête par défaut automatiquement.
-        Néanmoins vous pouvez préciser ici une valeur limite, par véhicule, à ne pas
-        dépasser.'
+      'optimization_time_help': 'Vous pouvez préciser ici une valeur maximale, par véhicule, à ne pas
+        dépasser. Sinon, l''optimisation s''arrête par défaut automatiquement.'
+      'optimization_minimal_time_default': '%{n} (valeur par défaut)'
+      'optimization_minimal_time_help': 'Vous pouvez préciser ici une durée minimale, par véhicule. 
+        Sinon l''optimisation s''arrête par défaut automatiquement.'
       'optimization_soft_upper_bound_default': '%{n} (valeur par défaut)'
       'optimization_stop_soft_upper_bound_help': 'Plus la valeur est grande plus les
         retards seront pénalisants (0 pour empêcher les retards de manière stricte :

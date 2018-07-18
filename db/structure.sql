@@ -103,7 +103,8 @@ CREATE TABLE customers (
     sms_template character varying,
     print_barcode character varying,
     sms_concat boolean DEFAULT false NOT NULL,
-    sms_from_customer_name boolean DEFAULT false NOT NULL
+    sms_from_customer_name boolean DEFAULT false NOT NULL,
+    optimization_minimal_time integer DEFAULT 3
 );
 
 
@@ -2760,3 +2761,4 @@ INSERT INTO schema_migrations (version) VALUES ('20180628142222');
 
 INSERT INTO schema_migrations (version) VALUES ('20180629081835');
 
+INSERT INTO schema_migrations (version) VALUES ('20180621101958');

@@ -30,7 +30,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should update customer' do
     sign_in users(:user_one)
-    patch :update, id: @customer, customer: {name: 123, router_dimension: 'distance', router_options: {motorway: 'true', trailers: 2, weight: 10, width: '3,55', hazardous_goods: 'gas'}}
+    patch :update, id: @customer, customer: {name: 123, router_dimension: 'distance', router_options: {motorway: 'true', trailers: 2, weight: 10, width: '3,55', hazardous_goods: 'gas'}, optimization_minimal_time: 4, optimization_time: 10}
     assert_redirected_to [:edit, @customer]
     assert_equal 'distance', @customer.reload.router_dimension
     # FIXME: replace each assertion by one which checks if hash is included in another
@@ -39,6 +39,8 @@ class CustomersControllerTest < ActionController::TestCase
     assert @customer.reload.router_options['weight'] = '10'
     assert @customer.reload.router_options['width'] = '3.55'
     assert @customer.reload.router_options['hazardous_goods'] = 'gas'
+    assert @customer.reload['optimization_minimal_time'] = 4
+    assert @customer.reload['optimization_time'] = 10
   end
 
   test 'should not destroy vehicles' do
