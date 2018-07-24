@@ -130,13 +130,13 @@ class Route < ApplicationRecord
       # Collect route legs
       segments = stops_sort.select{ |stop|
         stop.active && (stop.position? || (stop.is_a?(StopRest) && ((stop.open1 && stop.close1) || (stop.open2 && stop.close2)) && stop.duration))
-      }.collect{ |stop|
+      }.reverse.collect{ |stop|
         if stop.position?
           ret = [last_lat, last_lng, stop.lat, stop.lng] if !last_lat.nil? && !last_lng.nil?
           last_lat, last_lng = stop.lat, stop.lng
         end
         ret
-      }
+      }.reverse
 
       if !last_lat.nil? && !last_lng.nil? && vehicle_usage.default_store_stop.try(&:position?)
         segments << [last_lat, last_lng, vehicle_usage.default_store_stop.lat, vehicle_usage.default_store_stop.lng]
