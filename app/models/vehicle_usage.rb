@@ -184,15 +184,11 @@ class VehicleUsage < ApplicationRecord
     service_time_end_time || vehicle_usage_set.service_time_end_time
   end
 
-  def default_work_time(with_service = false, with_rest = false)
+  def default_work_time(with_service = false)
     default = work_time || vehicle_usage_set.work_time
 
     if with_service && default
       default = default - (default_service_time_start || 0) - (default_service_time_end || 0)
-    end
-
-    if with_rest && default
-      default = default - (default_rest_duration || 0)
     end
 
     return default
