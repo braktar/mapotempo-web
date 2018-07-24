@@ -10,7 +10,7 @@
         <ul>
           <% drivers.each do |driver| %>
             <li>
-              <%= t('.login', email: driver['email'], password: driver['password']) %>
+              <%= t('.login', email: driver[:email], password: driver[:password]) %>
             </li>
           <% end %>
         </ul>

@@ -150,13 +150,15 @@ class Fleet < DeviceBase
     vehicles_with_email = customer.vehicles.select(&:contact_email)
 
     cache_drivers = {} # Used when multiple vehicle have the same email (When creation)
-    vehicles_with_email.map do |vehicle|
+    drivers = vehicles_with_email.map do |vehicle|
       if vehicle.devices.key?(:fleet_user) && !vehicle.devices[:fleet_user].nil?
         update_driver(vehicle, api_key)
       else
         create_driver(vehicle, api_key, cache_drivers)
       end
-    end
+    end.compact
+    UserMailer.send_fleet_drivers(user, I18n.locale, drivers.reject{ |d| d.key?(:updated) }, current_admin).deliver_now
+    drivers
   end
 
   def create_driver(vehicle, api_key, cache_drivers)
