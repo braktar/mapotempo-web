@@ -327,23 +327,25 @@ var plannings_edit = function(params) {
         var route = routes.filter(function(route) {
           return (pos.vehicle_id in vehicles_usages_map) && (route.vehicle_usage_id === vehicles_usages_map[pos.vehicle_id].vehicle_usage_id);
         })[0];
-        var isMoving = pos.speed && (Date.parse(pos.time) > Date.now() - 600 * 1000);
-        var direction_icon = pos.direction ? '<i class="fa fa-location-arrow fa-stack-1x vehicle-direction" style="transform: rotate(' + (parseInt(pos.direction) - 45) + 'deg);" />' : '';
-        var iconContent = isMoving ?
-          '<span class="fa-stack" data-route_id="' + route.route_id + '"><i class="fa fa-truck fa-stack-2x vehicle-icon pulse" style="color: ' + (route.color || vehicles_usages_map[pos.vehicle_id].color) + '"></i>' + direction_icon + '</span>' :
-          '<i class="fa fa-truck fa-lg vehicle-icon" style="color: ' + (route.color || vehicles_usages_map[pos.vehicle_id].color) + '"></i>';
-        vehicleLayer.removeLayer(vehicleMarkers[pos.vehicle_id]);
-        vehicleMarkers[pos.vehicle_id] = L.marker(new L.LatLng(pos.lat, pos.lng), {
-          icon: new L.divIcon({
-            html: iconContent,
-            iconSize: new L.Point(24, 24),
-            iconAnchor: new L.Point(12, 12),
-            popupAnchor: new L.Point(0, -12),
-            className: 'vehicle-position'
-          }),
-          zIndexOffset: 800,
-          title: vehicles_usages_map[pos.vehicle_id].name + ' - ' + pos.device_name + ' - ' + I18n.t('plannings.edit.vehicle_speed') + ' ' + (prefered_unit === 'km' ? (pos.speed || 0) + ' km/h - ' : (Math.ceil10(pos.speed/1.609344) || 0) + ' mph - ') + I18n.t('plannings.edit.vehicle_last_position_time') + ' ' + (pos.time_formatted || (new Date(pos.time)).toLocaleString())
-        }).addTo(vehicleLayer);
+        if (route) {
+          var isMoving = pos.speed && (Date.parse(pos.time) > Date.now() - 600 * 1000);
+          var direction_icon = pos.direction ? '<i class="fa fa-location-arrow fa-stack-1x vehicle-direction" style="transform: rotate(' + (parseInt(pos.direction) - 45) + 'deg);" />' : '';
+          var iconContent = isMoving ?
+            '<span class="fa-stack" data-route_id="' + route.route_id + '"><i class="fa fa-truck fa-stack-2x vehicle-icon pulse" style="color: ' + (route.color || vehicles_usages_map[pos.vehicle_id].color) + '"></i>' + direction_icon + '</span>' :
+            '<i class="fa fa-truck fa-lg vehicle-icon" style="color: ' + (route.color || vehicles_usages_map[pos.vehicle_id].color) + '"></i>';
+          vehicleLayer.removeLayer(vehicleMarkers[pos.vehicle_id]);
+          vehicleMarkers[pos.vehicle_id] = L.marker(new L.LatLng(pos.lat, pos.lng), {
+            icon: new L.divIcon({
+              html: iconContent,
+              iconSize: new L.Point(24, 24),
+              iconAnchor: new L.Point(12, 12),
+              popupAnchor: new L.Point(0, -12),
+              className: 'vehicle-position'
+            }),
+            zIndexOffset: 800,
+            title: vehicles_usages_map[pos.vehicle_id].name + ' - ' + pos.device_name + ' - ' + I18n.t('plannings.edit.vehicle_speed') + ' ' + (prefered_unit === 'km' ? (pos.speed || 0) + ' km/h - ' : (Math.ceil10(pos.speed/1.609344) || 0) + ' mph - ') + I18n.t('plannings.edit.vehicle_last_position_time') + ' ' + (pos.time_formatted || (new Date(pos.time)).toLocaleString())
+          }).addTo(vehicleLayer);
+        }
       }
     });
   };
