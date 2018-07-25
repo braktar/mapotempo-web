@@ -113,8 +113,8 @@ class Route < ApplicationRecord
       service_time_end = service_time_end_value
       self.end = self.start = departure || vehicle_usage.default_open
       speed_multiplier = vehicle_usage.vehicle.default_speed_multiplier
-      if vehicle_usage.default_store_start.try(&:position?)
-        last_lat, last_lng = vehicle_usage.default_store_start.lat, vehicle_usage.default_store_start.lng
+      if vehicle_usage.default_store_stop.try(&:position?)
+        last_lat, last_lng = vehicle_usage.default_store_stop.lat, vehicle_usage.default_store_stop.lng
       end
       router = vehicle_usage.vehicle.default_router
       router_dimension = vehicle_usage.vehicle.default_router_dimension
@@ -134,14 +134,16 @@ class Route < ApplicationRecord
         if stop.position?
           ret = [last_lat, last_lng, stop.lat, stop.lng] if !last_lat.nil? && !last_lng.nil?
           last_lat, last_lng = stop.lat, stop.lng
+        elsif stop.is_a?(StopRest)
+          ret = [last_lat, last_lng, last_lat, last_lng] if !last_lat.nil? && !last_lng.nil?
         end
         ret
       }.reverse
 
-      if !last_lat.nil? && !last_lng.nil? && vehicle_usage.default_store_stop.try(&:position?)
-        segments << [last_lat, last_lng, vehicle_usage.default_store_stop.lat, vehicle_usage.default_store_stop.lng]
+      if !last_lat.nil? && !last_lng.nil? && vehicle_usage.default_store_start.try(&:position?)
+        segments.insert(0, [last_lat, last_lng, vehicle_usage.default_store_start.lat, vehicle_usage.default_store_start.lng])
       else
-        segments << nil
+        segments.insert(0, nil)
       end
 
       # Compute legs traces
