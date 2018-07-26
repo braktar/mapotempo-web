@@ -22,7 +22,7 @@ module FleetBuilder
 
       destinations << {
         mission_type: 'departure',
-        external_ref: generate_store_id(departure, route, planning_date(route.planning), type: 'departure'),
+        external_ref: generate_store_id(departure, route, p_time(route, route.start), type: 'departure'),
         name: departure.name,
         date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
         duration: route.vehicle_usage.default_service_time_start,
@@ -88,7 +88,7 @@ module FleetBuilder
       arrival = route.vehicle_usage.default_store_stop
       destinations << {
         mission_type: 'arrival',
-        external_ref: generate_store_id(arrival, route, planning_date(route.planning), type: 'arrival'),
+        external_ref: generate_store_id(arrival, route, p_time(route, route.end), type: 'arrival'),
         name: arrival.name,
         date: p_time(route, route.end).strftime('%FT%T.%L%:z'),
         duration: route.vehicle_usage.default_service_time_end,
@@ -115,7 +115,7 @@ module FleetBuilder
         user_id: convert_user(route.vehicle_usage.vehicle.devices[:fleet_user]),
         name: route.ref || route.vehicle_usage.vehicle.name,
         date: p_time(route, route.start).strftime('%FT%T.%L%:z'),
-        external_ref: generate_route_id(route, planning_date(route.planning), p_time(route, route.start)),
+        external_ref: generate_route_id(route, p_time(route, route.start)),
         missions: destinations
       }
     end

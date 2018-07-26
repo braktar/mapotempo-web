@@ -74,36 +74,45 @@ module FleetBase
             }.to_json
             stubs << stub_request(:get, url).to_return(status: 200, body: expected_response)
           when :fetch_stops
+            Time.zone = 'Hawaii'
             planning = plannings(:planning_one)
             planning_date = DateTime.now.strftime('%Y_%m_%d')
             reference_ids = planning.routes.select(&:vehicle_usage?).collect(&:stops).flatten.collect { |stop| (stop.is_a?(StopVisit) ? "mission-v#{stop.visit_id}-#{planning_date}" : "mission-r#{stop.id}-#{planning_date}") }.uniq
+            fs = FleetService.new(customer: @customer).service
 
-            url = FleetService.new(customer: @customer).service.send(:get_missions_url)
+            # Urls used to contact the fleet-api routes with missions
+            # Pattern: "{base}/api/0.1/routes/{route_id}?user_id=[a-z0-9]&with_missions=boolean"
+            urls = planning.routes.select(&:vehicle_usage?).collect { |route|
+              fs.send(:get_route_url, route.vehicle_usage.vehicle.devices[:fleet_user], fs.send(:generate_route_id, route, p_time(route, route.start)), true)
+            }
+
             expected_response = {
-              missions: [
-                {
-                  external_ref: reference_ids[2],
-                  status_type_reference: 'mission_to_do',
-                  status_type_label: 'To do',
-                  status_type_color: '#fff'
-                },
-                {
-                  external_ref: reference_ids[3],
-                  status_type_reference: 'mission_completed',
-                  status_type_label: 'Completed',
-                  status_type_color: '#000'
-                },
-                {
-                  mission_type: 'arrival',
-                  external_ref: "arrival-#{planning.routes.second.vehicle_usage.default_store_start.id}-#{planning_date}-#{planning.routes.second.id}",
-                  status_type_reference: 'mission_completed',
-                  status_type_label: 'To do',
-                  status_type_color: '#fff',
-                  eta: '2000-01-01 00:00:00.00'
-                }
-              ]
+              route: {
+                missions: [
+                  {
+                    external_ref: reference_ids[2],
+                    status_type_reference: 'mission_to_do',
+                    status_type_label: 'To do',
+                    status_type_color: '#fff'
+                  },
+                  {
+                    external_ref: reference_ids[3],
+                    status_type_reference: 'mission_completed',
+                    status_type_label: 'Completed',
+                    status_type_color: '#000'
+                  },
+                  {
+                    mission_type: 'arrival',
+                    external_ref: "arrival-#{planning.routes.second.vehicle_usage.default_store_start.id}-#{planning_date}-#{planning.routes.second.id}",
+                    status_type_reference: 'mission_completed',
+                    status_type_label: 'To do',
+                    status_type_color: '#fff',
+                    eta: '2000-01-01 00:00:00.00'
+                  }
+                ]
+              }
             }.to_json
-            stubs << stub_request(:get, url).to_return(status: 200, body: expected_response)
+            urls.each { |url| stubs << stub_request(:get, url).to_return(status: 200, body: expected_response) }
           when :set_missions_url
             url = FleetService.new(customer: @customer).service.send(:set_missions_url, 'driver1')
             expected_response = {
@@ -124,7 +133,7 @@ module FleetBase
           when :route_actions_url
             Time.zone = 'Hawaii'
             fs = FleetService.new(customer: @customer)
-            ext_ref = "#{@route.id}-#{fs.service.planning_date(@route.planning).strftime('%Y_%m_%d')}-#{fs.p_time(@route, @route.start).in_time_zone.strftime('%HH_%mm_%ss')}"
+            ext_ref = "route-#{@route.id}-#{fs.p_time(@route, @route.start).in_time_zone.strftime('%Y_%m_%d')}"
 
             url = fs.service.send(:get_route_url, @vehicle.devices[:fleet_user], ext_ref)
             post = fs.service.send(:post_routes_url, 'driver1')

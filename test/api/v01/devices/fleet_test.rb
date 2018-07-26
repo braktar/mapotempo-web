@@ -114,23 +114,22 @@ class V01::Devices::FleetTest < ActiveSupport::TestCase
   end
 
   test 'fetch stops and update quantities' do
+    set_route
     customers(:customer_one).update(job_optimizer_id: nil)
+
     with_stubs [:fetch_stops] do
       @customer.update_attribute(:enable_stop_status, true)
-      set_route
-      planning = @route.planning
+      planning = plannings(:planning_one)
 
       patch planning_api("#{planning.id}/update_stops_status", details: true)
       assert_equal 200, last_response.status
-
       assert_kind_of Array, JSON.parse(last_response.body)
+      planning.reload
 
-      planning.routes.select(&:vehicle_usage_id).each { |route|
-        if route.ref == 'route_one'
-          assert route.stops.select(&:active).any? { |stop| stop.status == 'Planned' }
-          assert route.stops.select(&:active).any? { |stop| stop.status == 'Finished' }
-        end
-      }
+      route = planning.routes.select { |route| route.vehicle_usage? && route.ref == 'route_one' }.first
+      status = route.stops.select { |s| s.active? && (s.status == 'Planned' || s.status == 'Finished') }
+
+      assert_equal ['Planned', 'Finished'], status.collect(&:status)
     end
   end
 end
