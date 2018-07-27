@@ -9,7 +9,11 @@ class ImporterDestinationsTest < ActionController::TestCase
 
   def around
     Location.stub_any_instance(:geocode, lambda{ |*a| puts 'Geocode destination without using bulk!'; raise }) do
-      Routers::RouterWrapper.stub_any_instance(:compute_batch, lambda { |url, mode, dimension, segments, options| segments.collect{ |i| [1, 1, '_ibE_seK_seK_seK'] } } ) do
+      Routers::RouterWrapper.stub_any_instance(:compute_batch, lambda { |url, mode, dimension, segments, options|
+          segments.collect{ |i|
+            i[0] == i[2] && i[1] == i[3] ? [0, 0, '_ibE_seK_seK_seK'] : [1, 1, '_ibE_seK_seK_seK']
+          }
+        }) do
         Routers::Osrm.stub_any_instance(:matrix, lambda{ |url, vector| Array.new(vector.size, Array.new(vector.size, 0)) }) do
           yield
         end
@@ -119,9 +123,9 @@ class ImporterDestinationsTest < ActionController::TestCase
           stop = Planning.last.routes.collect{ |r| r.stops.find{ |s| s.is_a?(StopVisit) && s.visit.destination.name == 'BF' } }.compact.first
           assert_equal true, stop.active
           if stop.route.vehicle_usage.default_store_start.position?
-            assert_not_nil stop.distance
+            assert_equal 1, stop.distance
           else
-            assert_nil stop.distance
+            assert_equal 0, stop.distance
           end
         end
       end
