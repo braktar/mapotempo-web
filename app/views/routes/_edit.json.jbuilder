@@ -10,7 +10,7 @@ if @with_planning
   end
 end
 json.extract! route, :ref, :hidden, :locked, :outdated, :size_active, :size_destinations
-(json.duration (route.start && route.end) ? time_over_day(route.end - route.start) : '00:00')
+(json.duration time_over_day(route.visits_duration.to_i + route.wait_time.to_i + route.drive_time.to_i))
 json.distance locale_distance(route.distance || 0, current_user.prefered_unit)
 json.size route.stops.size
 (json.start_time route.start_time) if route.start
