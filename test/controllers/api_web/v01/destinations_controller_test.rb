@@ -30,15 +30,28 @@ class ApiWeb::V01::DestinationsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customer)
   end
 
-  test 'should get index' do
-    get :index
+  test 'should get index in html' do
+      get :index, format: :html
+      assert_response :success
+      assert_nil assigns(:destinations)
+      assert_valid response
+  end
+
+  test 'should get index in json' do
+    get :index, format: :json
     assert_response :success
-    assert_nil assigns(:destinations)
     assert_valid response
   end
 
-  test 'should get index by ids' do
+  test 'should get index by ids in html' do
     get :index, ids: [destinations(:destination_one).id, destinations(:destination_two).id].join(',')
+    assert_response :success
+    assert_equal 2, assigns(:destinations).count
+    assert_valid response
+  end
+
+  test 'should get index by ids in json' do
+    get :index, ids: [destinations(:destination_one).id, destinations(:destination_two).id].join(','), format: :json
     assert_response :success
     assert_equal 2, assigns(:destinations).count
     assert_valid response

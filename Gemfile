@@ -63,6 +63,8 @@ group :development, :test do
 
   gem 'brakeman'
   gem 'figaro'
+
+  gem 'bullet'
 end
 
 group :test do

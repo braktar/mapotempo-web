@@ -47,18 +47,17 @@ class ApiWeb::V01::DestinationsController < ApiWeb::V01::ApiWebController
     @customer = current_user.customer
     @destinations = if params.key?(:ids)
       ids = params[:ids].split(',')
-      current_user.customer.destinations.where(ParseIdsRefs.where(Destination, ids))
+      current_user.customer.destinations.where(ParseIdsRefs.where(Destination, ids)).includes_visits
     else
       respond_to do |format|
         format.html do
           nil
         end
         format.json do
-          current_user.customer.destinations.load
+          current_user.customer.destinations.includes_visits
         end
       end
     end
-    @tags = current_user.customer.tags
     if params.key?(:store_ids)
       @stores = current_user.customer.stores.where(ParseIdsRefs.where(Store, params[:store_ids].split(',')))
     end

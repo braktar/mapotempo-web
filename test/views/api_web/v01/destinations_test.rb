@@ -12,6 +12,17 @@ class ApiWeb::V01::DestinationsTest < ActiveSupport::TestCase
     @customer.update(enable_orders: false)
   end
 
+  # TODO
+  # Bullet not taken into account in controller, need to be in views
+  def around
+    begin
+      Bullet.enable = true
+      yield
+    ensure
+      Bullet.enable = false
+    end
+  end
+
   test 'Api-web: should return json for destinations' do
     [:get, :post].each do |method|
       send method, "/api-web/0.1/destinations.json?api_key=testkey1"
@@ -23,10 +34,10 @@ class ApiWeb::V01::DestinationsTest < ActiveSupport::TestCase
 
   test 'Api-web: should return json for some destinations' do
     [:get, :post].each do |method|
-      send method, "/api-web/0.1/destinations.json?api_key=testkey1", {ids: destinations(:destination_one).id.to_s}
+      send method, "/api-web/0.1/destinations.json?api_key=testkey1", {ids: [destinations(:destination_one).id, destinations(:destination_two).id].join(',')}
       assert last_response.ok?, last_response.body
       json = JSON.parse(last_response.body)
-      assert_equal 1, json['destinations'].size
+      assert_equal 2, json['destinations'].size
     end
   end
 end

@@ -12,6 +12,17 @@ class ApiWeb::V01::StoresTest < ActiveSupport::TestCase
     @customer.update(enable_orders: false)
   end
 
+  # TODO
+  # Bullet not taken into account in controller, need to be in views
+  def around
+    begin
+      Bullet.enable = true
+      yield
+    ensure
+      Bullet.enable = false
+    end
+  end
+
   test 'Api-web: should return json for stores' do
     [:get, :post].each do |method|
       send method, "/api-web/0.1/stores.json?api_key=testkey1"

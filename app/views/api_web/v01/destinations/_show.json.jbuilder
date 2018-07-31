@@ -31,7 +31,7 @@ json.visits destination.visits do |visit|
     end
   end
 end
-unless destination.visits.exists? || tags.empty?
+unless !destination.visits.empty? || tags.empty?
   json.tags_present do
     json.tags do
       json.array! tags, :label

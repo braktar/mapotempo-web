@@ -83,7 +83,7 @@
         <td class="center"><%= customer.max_vehicles %></td>
         <td class="center"><%= customer.test ? raw('<i class="fa fa-check" aria-hidden="true"></i>') : '' %></td>
         <td class="center">
-          <% if !customer.users.exists? %>
+          <% if customer.users.empty? %>
             <span title="<%= t '.status_no_user' %>"><i class="fa fa-user-times fa-fw"></i><i class="fa fa-warning" style="color: orange;"></i></span>
           <% else %>
             <% not_connected = customer.users.collect(&:confirmed_at).compact.empty? %>

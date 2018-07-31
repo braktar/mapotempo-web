@@ -131,6 +131,17 @@ Rails.application.configure do
   config.validate_during_duplication = true
 
   config.logger_sms = nil
+
+  config.after_initialize do
+    Bullet.enable               = false
+    Bullet.alert                = false
+    Bullet.bullet_logger        = false
+    Bullet.console              = true
+    Bullet.rails_logger         = true
+    Bullet.add_footer           = false
+    Bullet.counter_cache_enable = false
+    Bullet.raise = true # raise an error if n+1 query occurs
+  end
 end
 
 I18n.available_locales = [:fr]

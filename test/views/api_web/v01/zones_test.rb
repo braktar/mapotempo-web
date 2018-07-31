@@ -12,6 +12,17 @@ class ApiWeb::V01::ZonesTest < ActiveSupport::TestCase
     @zoning = zonings(:zoning_one)
   end
 
+  # TODO
+  # Bullet not taken into account in controller, need to be in views
+  def around
+    begin
+      Bullet.enable = true
+      yield
+    ensure
+      Bullet.enable = false
+    end
+  end
+
   test 'Api-web: should return json for zones' do
     [:get, :post].each do |method|
       send method, "/api-web/0.1/zonings/#{@zoning.id}/zones.json?api_key=testkey1"
