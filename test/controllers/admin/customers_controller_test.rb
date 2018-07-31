@@ -31,7 +31,7 @@ class Admin::CustomersControllerTest < ActionController::TestCase
     assert_difference('Customer.count') do
       assert_difference('Vehicle.count', 2) do
         assert_difference('VehicleUsage.count', 2) do
-          post :create, customer: { name: 'new', max_vehicles: 2, default_country: 'France', speed_multiplier: 1, profile_id: profiles(:profile_one), router: routers(:router_one).id.to_s + '_time', optimization_minimal_time: 3, optimization_time: 5 }
+          post :create, customer: { name: 'new', max_vehicles: 2, default_country: 'France', speed_multiplier: 1, profile_id: profiles(:profile_one), router: routers(:router_one).id.to_s + '_time' }
         end
       end
     end
@@ -65,6 +65,25 @@ class Admin::CustomersControllerTest < ActionController::TestCase
       end
     ensure
       Mapotempo::Application.config.customer_test_default = true
+    end
+  end
+
+  test 'should update customer with different optimization time' do
+    [
+      {name: 'no time'},
+      {optimization_minimal_time: 3, optimization_time: 5},
+      {optimization_minimal_time: 3, optimization_time: nil}
+    ].each do |obj|
+      assert patch :update, id: @customer, customer: obj
+    end
+  end
+
+  test 'should not update customer with different optimization time' do
+    [
+      {optimization_minimal_time: 5, optimization_time: 3},
+      {optimization_minimal_time: nil, optimization_time: 4}
+    ].each do |obj|
+      assert patch :update, id: @customer, customer: obj
     end
   end
 

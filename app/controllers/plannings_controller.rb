@@ -284,14 +284,18 @@ class PlanningsController < ApplicationController
     active_only = ValueToBoolean::value_to_boolean(params[:active_only])
     respond_to do |format|
       begin
-        if Optimizer.optimize(@planning, nil, { global: global, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save
+        if Optimizer.optimize(@planning, nil, { global: global, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save!
           format.json { render action: 'show', location: @planning }
         else
+          errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
           format.json { render json: @planning.errors, status: :unprocessable_entity }
         end
       rescue NoSolutionFoundError
         @planning.errors[:base] = I18n.t('plannings.edit.dialog.optimizer.no_solution')
         format.json { render json: @planning.errors, status: :unprocessable_entity }
+      rescue ActiveRecord::RecordInvalid
+        errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
+        format.json { render json: errors, status: :unprocessable_entity }
       end
     end
   end
@@ -302,15 +306,19 @@ class PlanningsController < ApplicationController
     respond_to do |format|
       route = @planning.routes.find{ |route| route.id == Integer(params[:route_id]) }
       begin
-        if route && Optimizer.optimize(@planning, route, { global: false, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save
+        if route && Optimizer.optimize(@planning, route, { global: false, synchronous: false, active_only: active_only, ignore_overload_multipliers: ignore_overload_multipliers }) && @planning.customer.save!
           @routes = [route]
           format.json { render action: 'show', location: @planning }
         else
-          format.json { render json: @planning.errors, status: :unprocessable_entity }
+          errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
+          format.json { render json: errors, status: :unprocessable_entity }
         end
       rescue NoSolutionFoundError
         @planning.errors[:base] = I18n.t('plannings.edit.dialog.optimizer.no_solution')
         format.json { render json: @planning.errors, status: :unprocessable_entity }
+      rescue ActiveRecord::RecordInvalid
+        errors = @planning.errors.full_messages.size.zero? ? @planning.customer.errors.full_messages : @planning.errors.full_messages
+        format.json { render json: errors, status: :unprocessable_entity }
       end
     end
   end

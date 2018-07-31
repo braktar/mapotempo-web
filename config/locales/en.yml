@@ -615,6 +615,8 @@ en:
         tag:
           icon_unknown: is not in font-awesome icons list
           icon_size_invalid: is not a valid size
+        optimization_time:
+          must_be_greater_than_minimal_time: must be greater than minimal time
   errors:
     management:
       title: An error occurred
