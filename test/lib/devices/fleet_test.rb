@@ -116,4 +116,16 @@ class FleetTest < ActionController::TestCase
       assert_nil planning.routes.second.departure_eta
     end
   end
+
+  test 'should get vId when ref contains characters' do
+    ext_ref = 'mission-Test-tiret-v1757563-2018_08_01-159622'
+    parts = @service.send(:decode_mission_id, ext_ref)
+    assert_equal 'v1757563', parts[0]
+  end
+
+  test 'should get vId when no routes id has been specified' do
+    ext_ref = 'mission-Test-tiret-v1757563-2018_08_01'
+    parts = @service.send(:decode_mission_id, ext_ref)
+    assert_equal 'v1757563', parts[0]
+  end
 end

@@ -137,7 +137,7 @@ class Fleet < DeviceBase
       else
         raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_company.error')}")
       end
-    rescue RestClient::Unauthorized, RestClient::InternalServerError
+    rescue RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound
       raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.create_company.error')}")
     end
   end
@@ -403,8 +403,13 @@ class Fleet < DeviceBase
   end
 
   def decode_mission_id(mission_ref)
-    # Return the Order_id and the date
-    mission_ref.split('-')[1..2]
+    # if ext_ref's last element contains underscores then route.id is missing
+    parts = mission_ref.split('-')
+    if parts.last.include?('_')
+      parts[-2..-1]
+    else
+      parts[-3..-2]
+    end
   end
 
   # Return the route_id only if the current external ref isn't obsolete
