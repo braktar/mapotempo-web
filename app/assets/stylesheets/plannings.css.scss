@@ -61,6 +61,12 @@ $sidebar-margins: 10px;
         margin: 0 2px;
       }
     }
+    #move-stop-quantities {
+      margin: 10px 0;
+      div {
+        display: inline-block;
+      }
+    }
   }
 }
 
