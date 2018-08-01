@@ -1616,6 +1616,9 @@ en:
         move_stops:
           title: Moving stops
           move_to: Choose destination tour
+        move_destinations:
+          title: 'Moving stops'
+          in_progress: 'Assignment of visits to the vehicle in progress, please wait'
         vehicle:
           title: Switch vehicle
           in_progress: Please wait, applying new vehicle
@@ -1700,6 +1703,13 @@ en:
       default: Default
     show:
       print: Print
+  plannings_by_destination:
+    show:
+      auto_insert: Automatic insertion
+      select_vehicle: Assign to vehicle
+      show_planning: Show planning
+      show_destination: Show destination
+      title: Plannings by destination
   routes:
     show:
       print: Print

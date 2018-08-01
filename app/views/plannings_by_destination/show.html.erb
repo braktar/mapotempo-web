@@ -1,0 +1,83 @@
+<% content_for :title, t('.title') %>
+<h1><%= t '.title' %></h1>
+
+<div class="row row-top">
+  
+  <div class="col-md-12">
+    <div class="form-inline pull-right">
+      <%= text_field_tag :visits_filter, nil, placeholder: t('all.verb.filter'), class: 'form-control', 'data-change' => 'filter', 'data-target' => '#visits' %>
+      <span id="visits_count"><%= @stop_visits.count %></span> <%= t 'activerecord.models.visits', count: @stop_visits.count %>
+    </div>
+  </div>
+</div>
+
+<table id="visits" class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th><button type="button" class="btn btn-default btn-xs" data-toggle="selection" data-target="#visits" title="<%= t 'all.verb.toggle_selection' %>"><i class="fa fa-check fa-fw"></i></button></th>
+      <th><%= t 'activerecord.models.visit' %></th>
+      <th><%= t 'activerecord.models.vehicle' %></th>
+      <th><%= t 'activerecord.models.planning' %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stop_visits.each do |stop_visit| %>
+      <tr>
+        <td>
+          <input type="checkbox" checked="checked" 
+            data-stop="<%= stop_visit.id %>"
+            data-visit="<%= stop_visit.visit.id %>"
+            data-route="<%= stop_visit.route.id %>"
+            data-planning="<%= stop_visit.route.planning.id %>"
+            data-toggle="disable-multiple-actions"
+            data-target="#multiple_plannings_actions"/>
+        </td>
+        <td>
+          <a href="/destinations/<%= stop_visit.visit.destination.id %>/edit" title="<%= t '.show_destination' %>" data-toggle="tooltip">
+            <i class="fa fa-map-marker fa-fw"></i>
+          </a>
+          <span title="<%= stop_visit.visit.destination.street %>
+            <%= stop_visit.visit.destination.postalcode %>
+            <%= stop_visit.visit.destination.city %>" data-toggle="tooltip">
+            <% index_visit = (stop_visit.visit.destination.visits.index(stop_visit.visit) + 1) if stop_visit.visit.destination.visits.size > 1 %>
+            <%= stop_visit.name %> #<%= index_visit %>
+          </span>
+        </td>
+        <td>
+          <% if stop_visit.route.vehicle_usage %>
+          <span class="color_small" style="background:<%= stop_visit.route.vehicle_usage.vehicle.color %>"></span>
+          <%= stop_visit.route.vehicle_usage.vehicle.name %>
+          <% else %>
+          <%= t 'plannings.edit.out_of_route' %>
+          <% end %>
+        </td>
+        <td>
+          <a href="/plannings/<%= stop_visit.route.planning.id %>/edit" title="<%= t '.show_planning' %>" data-toggle="tooltip">
+            <i class="fa fa-calendar-o fa-fw"></i>
+          </a>
+          <%= stop_visit.route.planning.name %>
+          <% if stop_visit.route.planning.ref %>
+            (<%= stop_visit.route.planning.ref %>)
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div id="multiple_plannings_actions">
+  <div class="form-inline">
+    <%= button_tag type: :submit, id: "automatic-insert", class: "btn btn-default btn-sm form-group" do %><i class="fa fa-lightbulb-o"></i> <%= t('.auto_insert') %><% end %>
+    <%= t('.select_vehicle') %>
+    <%= select_tag 'vehicle_id', options_from_collection_for_select(@customer.vehicles, 'id', 'name'), include_blank: true, class: 'form-control' %>
+  </div>
+</div>
+
+<%
+controller.js(
+  user_api_key: current_user.api_key,
+  vehicles: Hash[@customer.vehicles.map{ |v| [v.id, {name: v.name, color: v.color}] }],
+  routesByVehicles: @routes_by_vehicles
+)
+%>

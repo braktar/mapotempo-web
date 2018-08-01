@@ -168,7 +168,6 @@ class PlanningsControllerTest < ActionController::TestCase
       Stop.class_eval do
         after_initialize :after_init
         def after_init
-          # TODO: stop are now loaded by size_active
           raise
         end
       end

@@ -137,6 +137,7 @@ Rails.application.routes.draw do
   get 'routes/:route_id/stops/by_index/:index' => 'stops#show'
 
   get 'routes_by_vehicles/:vehicle_id' => 'routes_by_vehicles#show'
+  get 'plannings_by_destination/:destination_id' => 'plannings_by_destination#show'
 
   get 'visits/:id' => 'visits#show'
 
