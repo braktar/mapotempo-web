@@ -132,7 +132,7 @@ class Route < ApplicationRecord
         stop.active && (stop.position? || (stop.is_a?(StopRest) && ((stop.open1 && stop.close1) || (stop.open2 && stop.close2)) && stop.duration))
       }.reverse.collect{ |stop|
         if stop.position?
-          ret = [last_lat, last_lng, stop.lat, stop.lng] if !last_lat.nil? && !last_lng.nil?
+          ret = [stop.lat, stop.lng, last_lat, last_lng] if !last_lat.nil? && !last_lng.nil?
           last_lat, last_lng = stop.lat, stop.lng
         elsif stop.is_a?(StopRest)
           ret = [last_lat, last_lng, last_lat, last_lng] if !last_lat.nil? && !last_lng.nil?
@@ -141,7 +141,7 @@ class Route < ApplicationRecord
       }.reverse
 
       if !last_lat.nil? && !last_lng.nil? && vehicle_usage.default_store_start.try(&:position?)
-        segments.insert(0, [last_lat, last_lng, vehicle_usage.default_store_start.lat, vehicle_usage.default_store_start.lng])
+        segments.insert(0, [vehicle_usage.default_store_start.lat, vehicle_usage.default_store_start.lng, last_lat, last_lng])
       else
         segments.insert(0, nil)
       end
