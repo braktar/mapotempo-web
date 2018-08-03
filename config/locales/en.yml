@@ -840,10 +840,10 @@ en:
         with delays and without any vehicle's capacity.
       optimization_time: Optimization time (minimum and maximum)
       optimization_time_default: '%{n} (default value)'
-      optimization_time_help: You can specify here a maximum time, per vehicle, for optimization, 
+      optimization_time_help: You can specify here a maximum time, per vehicle, for optimization,
         else the optimization stops automatically by default.
       optimization_minimal_time_default: '%{n} (default value)'
-      optimization_minimal_time_help: You can specify here a minimum duration, per vehicle, else 
+      optimization_minimal_time_help: You can specify here a minimum duration, per vehicle, else
         optimization stops automatically.
       optimization_soft_upper_bound_default: '%{n} (default value)'
       optimization_stop_soft_upper_bound_help: 'More the value is important, more
@@ -1052,7 +1052,7 @@ en:
       planning_ref: plan reference
       planning_ref_desc: plan reference for creation/update (if you want to import several plans,
         or update a specific one)
-      planning_name: plan name
+      planning_name: plan
       planning_name_desc: plan name for creation/update
       stop_type: stop type
       stop_type_desc: stop type in the plan. The default value is [visit]

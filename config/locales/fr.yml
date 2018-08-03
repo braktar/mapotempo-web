@@ -872,7 +872,7 @@
       'optimization_time_help': 'Vous pouvez préciser ici une valeur maximale, par véhicule, à ne pas
         dépasser. Sinon, l''optimisation s''arrête par défaut automatiquement.'
       'optimization_minimal_time_default': '%{n} (valeur par défaut)'
-      'optimization_minimal_time_help': 'Vous pouvez préciser ici une durée minimale, par véhicule. 
+      'optimization_minimal_time_help': 'Vous pouvez préciser ici une durée minimale, par véhicule.
         Sinon l''optimisation s''arrête par défaut automatiquement.'
       'optimization_soft_upper_bound_default': '%{n} (valeur par défaut)'
       'optimization_stop_soft_upper_bound_help': 'Plus la valeur est grande plus les
@@ -1103,7 +1103,7 @@
       'planning_ref': 'référence plan'
       'planning_ref_desc': 'référence plan à créer/modifier (si vous souhaitez importer
         plusieurs plans à la fois, ou remplacer un plan existant)'
-      'planning_name': 'nom plan'
+      'planning_name': 'plan'
       'planning_name_desc': 'nom du plan à créer/modifier'
       'stop_type': 'type arrêt'
       'stop_type_desc': 'type d''arrêt dans la tournée. La valeur par défaut est [visite]'
