@@ -231,6 +231,8 @@ class Fleet < DeviceBase
     error = nil
 
     planning.routes.select(&:vehicle_usage?).each do |route|
+      next if route.vehicle_usage.vehicle.devices[:fleet_user].blank?
+
       begin
         response = rest_client_get(
           get_route_url(route.vehicle_usage.vehicle.devices[:fleet_user], generate_route_id(route, p_time(route, route.start)), true),
@@ -239,11 +241,9 @@ class Fleet < DeviceBase
         response = JSON.parse(response)
         responses += response['route']['missions'] if response['route'].key?('missions')
       rescue RestClient::UnprocessableEntity, RestClient::Unauthorized, RestClient::InternalServerError, RestClient::ResourceNotFound => e
-        error = e
+        puts e.inspect
       end
     end
-
-    raise DeviceServiceError.new("Fleet: #{I18n.t('errors.fleet.fetch_stops')}") if error && responses.empty?
 
     # return all the missions packed in a comprehensible hash
     responses.map do |mission|

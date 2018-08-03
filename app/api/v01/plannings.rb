@@ -329,7 +329,8 @@ class V01::Plannings < Grape::API
         if Job.on_planning(planning.customer.job_optimizer, planning.id)
           status 204
         else
-          planning.fetch_stops_status
+          service = DeviceService.new customer: @customer
+          service.fetch_stops_status(planning)
           planning.save!
           if params[:details]
             present planning.routes, with: V01::Entities::RouteStatus

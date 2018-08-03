@@ -23,6 +23,9 @@ customer_one:
   max_destinations: 66
   max_vehicle_usage_sets: 5
   print_barcode: code128
+  devices:
+    fleet:
+      user: 'c_one_toto@example.com'
   router_options:
     time: true
     distance: true

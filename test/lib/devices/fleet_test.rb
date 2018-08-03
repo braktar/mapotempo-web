@@ -61,6 +61,7 @@ class FleetTest < ActionController::TestCase
   end
 
   test 'should update stop status' do
+    set_route
     with_stubs [:fetch_stops] do
       planning = plannings(:planning_one)
       planning.routes.select(&:vehicle_usage_id).each { |route|
@@ -95,6 +96,7 @@ class FleetTest < ActionController::TestCase
 
   test 'should update routes status' do
     planning = plannings(:planning_one)
+    set_route
     with_stubs [:fetch_stops] do
       planning.fetch_stops_status
       planning.save

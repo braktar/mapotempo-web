@@ -486,6 +486,7 @@ class Planning < ApplicationRecord
       if customer.enable_stop_status
         stops_map = Hash[routes.select(&:vehicle_usage?).flat_map(&:stops).map { |stop| [(stop.is_a?(StopVisit) ? "v#{stop.visit_id}" : "r#{stop.id}"), stop] }]
         stops_map.each { |ss| ss[1].assign_attributes status: nil, eta: nil }
+        routes.each(&:clear_eta_data)
         routes_quantities_changed = []
 
         stops_status = Mapotempo::Application.config.devices.each_pair.flat_map { |key, device|

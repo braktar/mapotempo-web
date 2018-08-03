@@ -42,6 +42,14 @@ class DeviceService
     service_name_id.keys.first if service_name_id
   end
 
+  def fetch_stops_status(planning)
+    # Key for cache is composed of :updated_at routes because planning will do operations by itself that can invalidate the data for 120 seconds
+    key = [:fetch_stops, service_name, planning.customer.id, planning.id, planning.routes.select(&:vehicle_usage?).map(&:updated_at)]
+    with_cache(key) do
+      planning.fetch_stops_status
+    end
+  end
+
   private
 
   def with_cache(key, &block)
