@@ -67,7 +67,7 @@ Rails.application.configure do
   )
   config.optimize_time = 60
   config.optimize_time_force = nil
-  config.optimize_minimal_time = 3
+  config.optimize_minimal_time = 15
   config.optimize_max_split_size = 500
   config.optimize_cluster_size = 0
   config.optimize_stop_soft_upper_bound = 0.3

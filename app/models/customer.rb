@@ -82,7 +82,7 @@ class Customer < ApplicationRecord
   validates :max_destinations, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_destinations }, allow_nil: true
   validates :max_vehicle_usage_sets, numericality: { greater_than: 0, less_than_or_equal_to: Mapotempo::Application.config.max_vehicle_usage_sets }, allow_nil: true
   validates :speed_multiplier, numericality: { greater_than_or_equal_to: 0.5, less_than_or_equal_to: 1.5 }, if: :speed_multiplier
-  validates :optimization_minimal_time, numericality: { greater_than_or_equal_to: Mapotempo::Application.config.optimize_minimal_time }, allow_nil: true
+  validates :optimization_minimal_time, numericality: true, allow_nil: true
   validates :optimization_time, numericality: true, allow_nil: true
   validate :validate_optimization_times
 
@@ -510,14 +510,12 @@ class Customer < ApplicationRecord
   end
 
   def validate_optimization_times
-    optimization_minimal_time = self.optimization_minimal_time ? self.optimization_minimal_time : Mapotempo::Application.config.optimize_minimal_time
-    optimization_time = self.optimization_time ? self.optimization_time : Mapotempo::Application.config.optimize_time
+    optimization_minimal_time = self.optimization_minimal_time || Mapotempo::Application.config.optimize_minimal_time
+    optimization_time = self.optimization_time || Mapotempo::Application.config.optimize_time
 
-    unless optimization_time.nil?
-      if optimization_time < optimization_minimal_time
-        errors.add(:optimization_time, I18n.t('activerecord.errors.models.optimization_time.must_be_greater_than_minimal_time'))
-        false
-      end
+    if optimization_minimal_time && optimization_time && optimization_time < optimization_minimal_time
+      errors.add(:optimization_time, I18n.t('activerecord.errors.models.optimization_time.must_be_greater_than_minimal_time'))
+      false
     end
   end
 end

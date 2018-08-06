@@ -104,7 +104,7 @@ CREATE TABLE customers (
     print_barcode character varying,
     sms_concat boolean DEFAULT false NOT NULL,
     sms_from_customer_name boolean DEFAULT false NOT NULL,
-    optimization_minimal_time integer DEFAULT 3
+    optimization_minimal_time integer
 );
 
 
