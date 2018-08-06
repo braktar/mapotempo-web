@@ -28,6 +28,25 @@
   .accordion-toggle.collapsed > span:before {
     content: "▸ ";
   }
+  #visits-header {
+    margin: 0px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  #visits-attributes-change-bulk-modal {
+    .visit-tags-change-bulk {
+      max-width: 160px;
+    }
+    .select2-container--bootstrap {
+      display: inline-block;
+      li {
+        display: block;
+        float: none;
+        margin-right: 10px;
+      }
+    }
+  }
   #visit-new {
     margin-bottom: 20px;
   }

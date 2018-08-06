@@ -1001,11 +1001,18 @@
         'confirm_overwrite_point': 'La position précédente a été définie manuellement
           sur la carte. Voulez-vous la remplacer avec le résultat du géocodage automatique
           ?'
+        'attributes_change_bulk':
+          'title': 'Changer plusieurs libellés à la fois'
+          'tags_help': 'Pour chaque ligne respective, permet de remplacer un libellé donné par un autre libellé existant'
       'visit':
         'enable_multi_visits': 'Besoin de plusieurs visites pour le même client ?
           Contactez le support pour avoir accès à cette fonctionnalité.'
         'new': 'Nouvelle visite'
         'new_help': 'Nouvelle visite si vous vous rendez plusieurs fois chez ce client.'
+        'attributes_change_bulk': 'Changer libellés'
+        'attributes_change_bulk_help': 'Changer plusieurs libellés à la fois'
+        'collapse_all': 'Tout compacter/développer'
+        'collapse_all_help': 'Tout compacter/développer'
     'edit':
       'title': 'Modifier client'
     'import':
@@ -2513,6 +2520,7 @@
       'save': 'Sauvegarder'
       'cancel': 'Annuler'
       'filter': 'Filtrer'
+      'apply': 'Appliquer'
     'unit':
       'm': 'm'
       'kms': 'km'

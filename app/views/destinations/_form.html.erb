@@ -99,6 +99,18 @@
     <% end %>
   </fieldset>
   <div id="visits">
+    <% if @destination.visits.size > 1 %>
+      <div class="row" id="visits-header">
+        <div class="col-md-2"></div>
+        <div id="visits-tools" class="col-xs-12 col-md-8">
+          <div class=" pull-right">
+            <button id="visits-attributes-change-bulk" type="button" class="btn btn-default btn-sm" title="<%= t('destinations.form.visit.attributes_change_bulk_help') %>" data-toggle="modal" data-target="#visits-attributes-change-bulk-modal"><i class="fa fa-list fa-fw"></i> <%= t('destinations.form.visit.attributes_change_bulk') %></button>
+            <button id="visits-expand" type="button" class="btn btn-default btn-sm" title="<%= t('destinations.form.visit.collapse_all_help') %>"><i class="fa fa-angle-double-down fa-fw"></i> <%= t('destinations.form.visit.collapse_all') %></button>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+    <% end %>
     <% ((!@destination.visits.empty? && @destination.visits) || [@destination.visits.build]).each_with_index do |visit, i| %>
       <%= render 'visits/form', visit: visit, i: i+1 %>
     <% end %>
@@ -117,6 +129,38 @@
 <% end %>
 <div id="visit-fieldset-template">
   <%= render 'visits/form', visit: @destination.visits.build, i: 0 %>
+</div>
+<div class="modal fade" id="visits-attributes-change-bulk-modal" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><%= t 'destinations.form.dialog.attributes_change_bulk.title' %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-2"><label><%= t 'activerecord.attributes.visit.tags' %></label></div>
+            <div class="col-md-10">
+              <div class="form-inline">
+                Remplacer
+                <%= select_tag 'from_visit_tags', options_for_select(@destination.customer.tags.map{ |t| [t.label, t.id] }), multiple: true, include_blank: true, class: 'form-control visit-tags-change-bulk' %>
+                par
+                <%= select_tag 'to_visit_tags', options_for_select(@destination.customer.tags.map{ |t| [t.label, t.id] }), multiple: true, include_blank: true, class: 'form-control visit-tags-change-bulk' %>
+              </div>
+              <p class="help-block">
+                <%= t('destinations.form.dialog.attributes_change_bulk.tags_help') %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-undo fa-fw"></i> <%= t 'all.verb.cancel' %></button>
+        <button name="visits-attributes-change-bulk-apply" type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-list fa-fw"></i> <%= t 'all.verb.apply' %></button>
+      </div>
+    </div>
+  </div>
 </div>
 <%
 layers = (current_user.customer.profile.layers + [current_user.layer]).sort_by(&:id).uniq.collect{ |layer|

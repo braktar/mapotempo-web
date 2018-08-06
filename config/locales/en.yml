@@ -959,11 +959,18 @@ en:
       dialog:
         confirm_overwrite_point: Position has been set manually. Override with geocoding
           results?
+        attributes_change_bulk:
+          title: Change several tags in oce action
+          tags_help: For each respective line, allow to replace a specific tag with another existing tag
       visit:
         enable_multi_visits: Need more than one visit for this destination? Please
           contact support to activate this feature.
         new: New visit
         new_help: New visit if you go to this destination several times.
+        attributes_change_bulk: Change tags
+        attributes_change_bulk_help: Change several tags in oce action
+        collapse_all: Collapse/expand all
+        collapse_all_help: Collapse/expand all
     edit:
       title: Editing destination
     import:
@@ -2350,6 +2357,7 @@ en:
       save: Save
       cancel: Cancel
       filter: Filter
+      apply: Appliquer
     unit:
       m: m
       kms: km

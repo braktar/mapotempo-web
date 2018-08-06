@@ -54,7 +54,7 @@ var destinations_form = function(params, api) {
 
     customColorInitialize('#store_color');
 
-    //for turbolinks, when clicking on link_to
+    // for turbolinks, when clicking on link_to
     $('.selectpicker').selectpicker();
   }
 
@@ -448,6 +448,30 @@ var destinations_form = function(params, api) {
     });
     $("#visits").find(".accordion-toggle[href!='" + window.location.hash + "']").addClass('collapsed');
   }
+
+  var op = 'show';
+  $('#visits-expand').click(function() {
+    op = (op == 'show') ? 'hide' : 'show';
+    $('#visits .collapse').collapse(op);
+  });
+
+  $('#from_visit_tags, #to_visit_tags').select2({
+    theme: 'bootstrap',
+    width: '160px',
+    closeOnSelect: false
+  });
+  $('[name="visits-attributes-change-bulk-apply"]').click(function() {
+    var fromTags = $('#from_visit_tags').val(),
+      toTags = $('#to_visit_tags').val(),
+      $visitTags = $('#visits [name$="[tag_ids][]"]');
+    for (var i in fromTags) {
+      $visitTags.each(function(j, elt) {
+        $('option[value=' + fromTags[i] + ']', $(elt).parent()).removeAttr('selected');
+        $('option[value=' + toTags[i] + ']', $(elt).parent()).attr('selected', 'selected');
+        $(elt).change();
+      });
+    }
+  });
 };
 
 
