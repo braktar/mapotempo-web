@@ -227,12 +227,12 @@ class ImporterDestinationsTest < ActionController::TestCase
         assert_difference('Stop.count', import_count * (@customer.plannings.select{ |p| p.tags.any?{ |t| t.label == 'été' } }.size + 1) + rest_count) do
           di = ImportCsv.new(importer: ImporterDestinations.new(@customer), replace: false, file: tempfile('test/fixtures/files/import_destinations_many-utf-8.csv', 'text.csv'))
           assert di.import, di.errors.messages
-          assert_equal 'été', @customer.plannings.collect{ |p| p.tags.collect(&:label).join || 'oups' }.uniq.join
+          assert_equal 'été', @customer.plannings.map{ |p| p.tags.map(&:label).empty? ? 'oups' : p.tags.map(&:label).join }.join
         end
       end
     end
 
-    o = Destination.find{ |d| d.name == 'Point 1' }
+    o = Destination.find_by(name: 'Point 1')
     assert_equal ['été'], o.visits.first.destination.tags.collect(&:label)
     p = Planning.first
     assert_equal import_count, p.routes[0].stops.size
