@@ -1,14 +1,11 @@
 json.planning_id @planning.id
 
 json.routes @routes do |route|
-  (json.outdated true) if route.outdated
   json.route_id route.id
+  json.extract! route, :color, :hidden, :locked, :outdated, :size_active, :size_destinations
   (json.duration '%i:%02i' % [(route.end - route.start) / 60 / 60, (route.end - route.start) / 60 % 60]) if route.start && route.end
-  (json.hidden true) if route.hidden
-  (json.locked true) if route.locked
   json.distance number_to_human((route.distance || 0), units: :distance, precision: 3, format: '%n %u')
   json.size route.stops.size
-  json.extract! route, :color, :size_active
   json.ref route.ref if @planning.customer.enable_references
   unless @planning.customer.enable_orders
     json.quantities route.quantities

@@ -1529,6 +1529,7 @@
       'last_sent_to': 'Envoi'
       'title': 'Modifier plan'
       'stops': 'arrêts'
+      'destinations': 'clients'
       'without_stops_title': 'Les arrêts de ce plan de tournées volumineux n''ont
         pas été chargés pour améliorer les performances de l''affichage'
       'load_stops_out_of_route': 'Charger les arrêts non planifiés'

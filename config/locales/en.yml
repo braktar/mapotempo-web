@@ -1422,6 +1422,7 @@ en:
       last_sent_to: Sent to
       title: Editing plan
       stops: stops
+      destinations: destinations
       without_stops_title: Stops from this sizeable plan were not loaded to improve
         display performance
       load_stops_out_of_route: Load unplanned stops

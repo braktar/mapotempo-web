@@ -9,13 +9,10 @@ if @with_planning
     json.color tag.default_color
   end
 end
-json.extract! route, :ref, :outdated
+json.extract! route, :ref, :hidden, :locked, :outdated, :size_active, :size_destinations
 (json.duration (route.start && route.end) ? time_over_day(route.end - route.start) : '00:00')
-(json.hidden true) if route.hidden
-(json.locked true) if route.locked
 json.distance locale_distance(route.distance || 0, current_user.prefered_unit)
 json.size route.stops.size
-json.size_active route.size_active
 (json.start_time route.start_time) if route.start
 (json.start_day number_of_days(route.start)) if route.start
 (json.end_time route.end_time) if route.end

@@ -441,6 +441,12 @@ class Route < ApplicationRecord
     vehicle_usage_id ? (stops.loaded? ? stops.select(&:active).size : stops.where(active: true).count) : 0
   end
 
+  def size_destinations
+    stops.loaded? ?
+      stops.select(&:active).map{ |s| s.is_a?(StopVisit) ? s.visit.destination_id : nil }.compact.uniq.size :
+      nil # TODO: should count with ActiveRecord::Base.connection.execute("SELECT COUNT(DISTINCT id) FROM destinations")
+  end
+
   def no_geolocalization
     stops.loaded? ?
       stops.any?{ |s| s.is_a?(StopVisit) && !s.position? } :

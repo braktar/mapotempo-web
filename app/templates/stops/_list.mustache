@@ -82,6 +82,9 @@
           {{/status_any}}
         </ul>
       </div>
+      {{#size_destinations}}
+        <span class="route-info"><i class="fa fa-map-marker fa-fw"></i>{{size_destinations}}&nbsp;{{#i18n}}plannings.edit.destinations{{/i18n}}</span>
+      {{/size_destinations}}
       <span class="route-info" title="{{#i18n}}plannings.edit.route_duration_help{{/i18n}}"><i class="fa fa-clock-o fa-fw"></i>{{duration}}/{{work_or_window_time}}</span>
       {{#route_averages}}
         (<span title="{{#i18n}}plannings.edit.route_driving_time_help{{/i18n}}"><i class="fa fa-road fa-fw"></i>{{route_averages.drive_time}}</span><!--
